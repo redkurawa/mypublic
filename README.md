@@ -8,7 +8,8 @@ A modern portfolio website built with Next.js, Tailwind CSS, and Prisma. Feature
 - 🎨 **Dark/Light Mode** - Theme toggle with system preference detection
 - 📬 **Contact Form** - Email integration via Resend API
 - 🔐 **Admin Dashboard** - Protected area for managing projects
-- 🗄️ **Database** - PostgreSQL via Neon (serverless)
+- 🔄 **Project Reordering** - Drag-and-drop or manual order number editing to rearrange projects
+- �️ **Database** - PostgreSQL via Neon (serverless)
 - 🚀 **Fast Performance** - Built with Next.js 16 and Turbopack
 
 ## Tech Stack
@@ -139,6 +140,7 @@ Follow the prompts to configure your project.
 2. Login with your admin password
 3. Add projects by entering a URL
 4. Delete projects by clicking the delete button
+5. Reorder projects by dragging or editing order numbers
 
 ### Adding Projects
 
@@ -146,6 +148,15 @@ Follow the prompts to configure your project.
 2. Enter a project URL in the input field
 3. Click "Add Project"
 4. The project will appear in the portfolio grid
+
+### Reordering Projects
+
+There are two ways to change the order of projects:
+
+1. **Drag and Drop** - Click and drag the project card to a new position
+2. **Manual Order Number** - Edit the order number directly in the input field for precise control
+
+The order is saved automatically and reflected on the home page immediately.
 
 ## Security Features
 

@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 export async function GET() {
   try {
     const projects = await db.project.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { order: 'asc' },
     });
     return NextResponse.json(projects);
   } catch (error) {
@@ -32,6 +32,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'URL is required' }, { status: 400 });
     }
 
+    // Get the max order value
+    const maxOrderProject = await db.project.findFirst({
+      orderBy: { order: 'desc' },
+      select: { order: true },
+    });
+    const newOrder = (maxOrderProject?.order ?? -1) + 1;
+
     // Simple title extraction from hostname
     let title = url;
     try {
@@ -47,6 +54,7 @@ export async function POST(req: Request) {
       data: {
         url,
         title,
+        order: newOrder,
       },
     });
 
@@ -55,6 +63,39 @@ export async function POST(req: Request) {
     console.error('Database Error:', error);
     return NextResponse.json(
       { error: 'Failed to create project' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const cookieStore = await cookies();
+    const session = cookieStore.get('admin_session');
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id, order } = await req.json();
+
+    if (!id || order === undefined) {
+      return NextResponse.json(
+        { error: 'ID and order are required' },
+        { status: 400 }
+      );
+    }
+
+    const project = await db.project.update({
+      where: { id },
+      data: { order },
+    });
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error('Database Error:', error);
+    return NextResponse.json(
+      { error: 'Failed to update project order' },
       { status: 500 }
     );
   }
