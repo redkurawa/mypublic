@@ -48,7 +48,7 @@ Create a `.env` file in the root directory:
 DATABASE_URL="postgresql://username:password@host.neon.tech/dbname?sslmode=require"
 
 # Admin Authentication
-ADMIN_PASSWORD="your-secure-password"
+ADMIN_PASSWORD="YourPasswordIsLove"
 
 # Email (Resend)
 RESEND_API_KEY="re_xxxxxxxxxxxxx"
