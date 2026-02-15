@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MessageCircle, Mail, Heart } from 'lucide-react';
+import { VisitorCounter } from '@/components/visitor-counter';
 
 export function Footer() {
   const contactEmail = process.env.CONTACT_EMAIL || 'contact@example.com';
@@ -17,7 +18,7 @@ export function Footer() {
   return (
     <footer className='bg-background/50 backdrop-blur-sm'>
       <div className='container mx-auto px-4 py-12'>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center'>
           {/* Brand */}
           <div className='space-y-3'>
             <span className='text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent'>
@@ -64,14 +65,14 @@ export function Footer() {
                 rel='noopener noreferrer'
                 className='inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-green-500 transition-colors'
               >
-                <MessageCircle className='h-4 w-4' />
+                <MessageCircle className='h-4 w-4 text-green-500' />
                 Chat on WhatsApp
               </a>
               <a
                 href={`mailto:${contactEmail}`}
-                className='inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors'
+                className='inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-red-500 transition-colors'
               >
-                <Mail className='h-4 w-4' />
+                <Mail className='h-4 w-4 text-red-500' />
                 <span dangerouslySetInnerHTML={{ __html: obfuscatedEmail }} />
               </a>
             </div>
@@ -83,10 +84,13 @@ export function Footer() {
           <p className='text-xs text-muted-foreground'>
             &copy; {currentYear} Portfolio. All rights reserved.
           </p>
-          <p className='text-xs text-muted-foreground inline-flex items-center gap-1'>
-            Made with <Heart className='h-3 w-3 text-red-500 fill-red-500' />{' '}
-            and passion
-          </p>
+          <div className='flex items-center gap-4'>
+            <VisitorCounter />
+            <p className='text-xs text-muted-foreground inline-flex items-center gap-1'>
+              Made with <Heart className='h-3 w-3 text-red-500 fill-red-500' />{' '}
+              and passion
+            </p>
+          </div>
         </div>
       </div>
     </footer>

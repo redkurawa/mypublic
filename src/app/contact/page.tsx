@@ -56,10 +56,10 @@ export default function ContactPage() {
 
         <a
           href={`mailto:${contactEmail}`}
-          className='group flex flex-col items-center gap-3 rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-primary/50'
+          className='group flex flex-col items-center gap-3 rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-1 hover:border-red-500/50'
         >
-          <div className='flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors'>
-            <Mail className='h-6 w-6 text-primary' />
+          <div className='flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 group-hover:bg-red-500/20 transition-colors'>
+            <Mail className='h-6 w-6 text-red-500' />
           </div>
           <div className='text-center'>
             <p className='text-sm font-semibold'>Email</p>
