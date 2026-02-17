@@ -16,8 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Premium Portfolio",
-  description: "A showcase of my projects",
+  title: "Portfolio Pro - Showcase Your Best Work",
+  description: "Create a stunning portfolio that captivates visitors. Manage your projects effortlessly with our beautiful, modern platform.",
+  keywords: ["portfolio", "projects", "showcase", "developer", "designer"],
 };
 
 export default function RootLayout({
@@ -32,15 +33,17 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
-          <Header />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          <div className="relative min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

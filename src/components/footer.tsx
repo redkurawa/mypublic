@@ -1,94 +1,122 @@
 import Link from 'next/link';
-import { MessageCircle, Mail, Heart } from 'lucide-react';
+import { MessageCircle, Mail, Heart, Sparkles, Github, Twitter, Linkedin } from 'lucide-react';
 import { VisitorCounter } from '@/components/visitor-counter';
 
 export function Footer() {
   const contactEmail = process.env.CONTACT_EMAIL || 'contact@example.com';
   const currentYear = new Date().getFullYear();
 
-  // Obfuscate email untuk mencegah scraping
   const obfuscatedEmail = contactEmail
     .replace(/@/g, '&#64;')
     .replace(/\./g, '&#46;');
 
-  // WhatsApp number - base64 encoded untuk obfuscation
-  // "6281297879978" encoded = "NjI4MTI5Nzg3OTk3OA=="
   const whatsappEncoded = 'NjI4MTI5Nzg3OTk3OA==';
 
+  const socialLinks = [
+    { icon: Github, href: '#', label: 'GitHub' },
+    { icon: Twitter, href: '#', label: 'Twitter' },
+    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+  ];
+
+  const quickLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'Projects', href: '/#projects' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'FAQ', href: '/#faq' },
+  ];
+
   return (
-    <footer className='bg-background/50 backdrop-blur-sm'>
-      <div className='container mx-auto px-4 py-12'>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center'>
+    <footer className='relative bg-gradient-to-b from-transparent to-primary/[0.03] border-t border-primary/10'>
+      <div className="absolute inset-0 bg-grid-pattern opacity-30" />
+      
+      <div className='container mx-auto px-4 py-16 relative'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12'>
           {/* Brand */}
-          <div className='space-y-3'>
-            <span className='text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent'>
-              Portfolio
-            </span>
-            <p className='text-sm text-muted-foreground max-w-xs'>
-              Building digital experiences that matter. Let&apos;s create
-              something amazing together.
+          <div className='space-y-4 lg:col-span-2'>
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:shadow-primary/30 transition-shadow">
+                <Sparkles className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-xl font-bold">
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Portfolio
+                </span>
+                <span className="text-foreground">Pro</span>
+              </span>
+            </Link>
+            <p className='text-muted-foreground max-w-sm leading-relaxed'>
+              Building digital experiences that matter. Let&apos;s create something amazing together with modern technology and stunning design.
             </p>
+            
+            {/* Social Links */}
+            <div className="flex gap-3 pt-2">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.href}
+                  className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                  aria-label={social.label}
+                >
+                  <social.icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Quick Links */}
-          <div className='space-y-3'>
-            <h3 className='text-sm font-semibold'>Quick Links</h3>
-            <nav className='flex flex-col gap-2'>
-              <Link
-                href='/'
-                className='text-sm text-muted-foreground hover:text-foreground transition-colors'
-              >
-                Home
-              </Link>
-              <Link
-                href='/#projects'
-                className='text-sm text-muted-foreground hover:text-foreground transition-colors'
-              >
-                Projects
-              </Link>
-              <Link
-                href='/contact'
-                className='text-sm text-muted-foreground hover:text-foreground transition-colors'
-              >
-                Contact
-              </Link>
+          <div className='space-y-4'>
+            <h3 className='text-sm font-bold uppercase tracking-wider text-foreground'>Quick Links</h3>
+            <nav className='flex flex-col gap-3'>
+              {quickLinks.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.href}
+                  className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group'
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                  {link.label}
+                </Link>
+              ))}
             </nav>
           </div>
 
           {/* Contact Info */}
-          <div className='space-y-3'>
-            <h3 className='text-sm font-semibold'>Get in Touch</h3>
-            <div className='flex flex-col gap-2'>
+          <div className='space-y-4'>
+            <h3 className='text-sm font-bold uppercase tracking-wider text-foreground'>Get in Touch</h3>
+            <div className='flex flex-col gap-4'>
               <a
                 href={`https://wa.me/${atob(whatsappEncoded)}`}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-green-500 transition-colors'
+                className='inline-flex items-center gap-3 text-muted-foreground hover:text-green-600 transition-all group'
               >
-                <MessageCircle className='h-4 w-4 text-green-500' />
-                Chat on WhatsApp
+                <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-500 transition-colors">
+                  <MessageCircle className='h-5 w-5 text-green-600 group-hover:text-white' />
+                </div>
+                <span className="text-sm">Chat on WhatsApp</span>
               </a>
               <a
                 href={`mailto:${contactEmail}`}
-                className='inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-red-500 transition-colors'
+                className='inline-flex items-center gap-3 text-muted-foreground hover:text-red-500 transition-all group'
               >
-                <Mail className='h-4 w-4 text-red-500' />
-                <span dangerouslySetInnerHTML={{ __html: obfuscatedEmail }} />
+                <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center group-hover:bg-red-500 transition-colors">
+                  <Mail className='h-5 w-5 text-red-500 group-hover:text-white' />
+                </div>
+                <span className="text-sm" dangerouslySetInnerHTML={{ __html: obfuscatedEmail }} />
               </a>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className='mt-10 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4'>
-          <p className='text-xs text-muted-foreground'>
-            &copy; {currentYear} Portfolio. All rights reserved.
+        <div className='mt-12 pt-8 border-t border-primary/10 flex flex-col md:flex-row items-center justify-between gap-4'>
+          <p className='text-sm text-muted-foreground'>
+            &copy; {currentYear} PortfolioPro. All rights reserved.
           </p>
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-6'>
             <VisitorCounter />
-            <p className='text-xs text-muted-foreground inline-flex items-center gap-1'>
-              Made with <Heart className='h-3 w-3 text-red-500 fill-red-500' />{' '}
-              and passion
+            <p className='text-sm text-muted-foreground inline-flex items-center gap-1.5'>
+              Made with <Heart className='h-4 w-4 text-red-500 fill-red-500 animate-pulse' /> and passion
             </p>
           </div>
         </div>

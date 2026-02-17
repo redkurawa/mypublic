@@ -9,6 +9,7 @@ A modern portfolio website built with Next.js, Tailwind CSS, and Prisma. Feature
 - 📬 **Contact Form** - Email integration via Resend API
 - 🔐 **Admin Dashboard** - Protected area for managing projects
 - 🔄 **Project Reordering** - Drag-and-drop or manual order number editing to rearrange projects
+- ✏️ **Edit Projects** - Update project titles and URLs directly in the admin dashboard
 - �️ **Database** - PostgreSQL via Neon (serverless)
 - 🚀 **Fast Performance** - Built with Next.js 16 and Turbopack
 
@@ -139,8 +140,9 @@ Follow the prompts to configure your project.
 1. Navigate to `/admin`
 2. Login with your admin password
 3. Add projects by entering a URL
-4. Delete projects by clicking the delete button
-5. Reorder projects by dragging or editing order numbers
+4. Edit project details (title and URL) by clicking the pencil icon
+5. Delete projects by clicking the delete button
+6. Reorder projects by dragging or editing order numbers
 
 ### Adding Projects
 

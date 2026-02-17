@@ -77,25 +77,46 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id, order } = await req.json();
+    const { id, order, title, url } = await req.json();
 
-    if (!id || order === undefined) {
+    if (!id) {
       return NextResponse.json(
-        { error: 'ID and order are required' },
+        { error: 'ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const updateData: { order?: number; title?: string; url?: string } = {};
+    
+    if (order !== undefined) {
+      updateData.order = order;
+    }
+    
+    if (title !== undefined) {
+      updateData.title = title;
+    }
+    
+    if (url !== undefined) {
+      updateData.url = url;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json(
+        { error: 'At least one field (order, title, or url) must be provided' },
         { status: 400 }
       );
     }
 
     const project = await db.project.update({
       where: { id },
-      data: { order },
+      data: updateData,
     });
 
     return NextResponse.json(project);
   } catch (error) {
     console.error('Database Error:', error);
     return NextResponse.json(
-      { error: 'Failed to update project order' },
+      { error: 'Failed to update project' },
       { status: 500 }
     );
   }

@@ -11,6 +11,7 @@ import {
   X,
   Check,
   Loader2,
+  Edit2,
 } from 'lucide-react';
 
 interface Project {
@@ -31,6 +32,9 @@ export function AdminDashboard({
   const [loading, setLoading] = useState(false);
   const [editingOrderId, setEditingOrderId] = useState<string | null>(null);
   const [editOrderValue, setEditOrderValue] = useState<string>('');
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editUrl, setEditUrl] = useState('');
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
@@ -89,22 +93,22 @@ export function AdminDashboard({
     }
   };
 
-  const updateProjectOrder = async (id: string, newOrder: number) => {
+  const updateProject = async (id: string, data: { order?: number; title?: string; url?: string }) => {
     try {
       const res = await fetch('/api/projects', {
         method: 'PUT',
-        body: JSON.stringify({ id, order: newOrder }),
+        body: JSON.stringify({ id, ...data }),
         headers: { 'Content-Type': 'application/json' },
       });
-      const data = await res.json();
+      const result = await res.json();
       if (!res.ok) {
-        console.error('Failed to update order:', data);
-        return false;
+        console.error('Failed to update project:', result);
+        return null;
       }
-      return true;
+      return result;
     } catch (e) {
-      console.error('Error updating order:', e);
-      return false;
+      console.error('Error updating project:', e);
+      return null;
     }
   };
 
@@ -113,7 +117,7 @@ export function AdminDashboard({
     setEditOrderValue(project.order.toString());
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEditOrder = () => {
     setEditingOrderId(null);
     setEditOrderValue('');
   };
@@ -127,11 +131,9 @@ export function AdminDashboard({
 
     setSaving(true);
 
-    // Update the project order
-    const success = await updateProjectOrder(project.id, newOrder);
+    const updatedProject = await updateProject(project.id, { order: newOrder });
 
-    if (success) {
-      // Reorder all projects
+    if (updatedProject) {
       const updatedProjects = projects.map((p) => {
         if (p.id === project.id) {
           return { ...p, order: newOrder };
@@ -139,13 +141,56 @@ export function AdminDashboard({
         return p;
       });
 
-      // Sort by order
       updatedProjects.sort((a, b) => a.order - b.order);
       setProjects(updatedProjects);
       showSaveMessage('Order updated successfully!');
     }
 
     setEditingOrderId(null);
+    setSaving(false);
+    router.refresh();
+  };
+
+  const handleEditProject = (project: Project) => {
+    setEditingProjectId(project.id);
+    setEditTitle(project.title || '');
+    setEditUrl(project.url);
+  };
+
+  const handleCancelEditProject = () => {
+    setEditingProjectId(null);
+    setEditTitle('');
+    setEditUrl('');
+  };
+
+  const handleSaveProject = async (project: Project) => {
+    if (!editTitle.trim() || !editUrl.trim()) {
+      showSaveMessage('Title and URL are required!');
+      return;
+    }
+
+    setSaving(true);
+
+    const updatedProject = await updateProject(project.id, { 
+      title: editTitle.trim(), 
+      url: editUrl.trim() 
+    });
+
+    if (updatedProject) {
+      const updatedProjects = projects.map((p) => {
+        if (p.id === project.id) {
+          return { ...p, title: editTitle.trim(), url: editUrl.trim() };
+        }
+        return p;
+      });
+
+      setProjects(updatedProjects);
+      showSaveMessage('Project updated successfully!');
+    } else {
+      showSaveMessage('Failed to update project. Please try again.');
+    }
+
+    setEditingProjectId(null);
     setSaving(false);
     router.refresh();
   };
@@ -192,17 +237,15 @@ export function AdminDashboard({
     const [draggedProject] = newProjects.splice(draggedIndex, 1);
     newProjects.splice(dropIndex, 0, draggedProject);
 
-    // Update order values based on new positions
     const updatedProjects = newProjects.map((p, i) => ({
       ...p,
       order: i,
     }));
 
-    // Update all projects to ensure correct order
     let allSuccess = true;
     for (const p of updatedProjects) {
-      const success = await updateProjectOrder(p.id, p.order);
-      if (!success) {
+      const result = await updateProject(p.id, { order: p.order });
+      if (!result) {
         allSuccess = false;
         console.error('Failed to update project:', p.id);
       }
@@ -258,7 +301,7 @@ export function AdminDashboard({
             onChange={(e) => setUrl(e.target.value)}
             placeholder='https://example.com'
             required
-            className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+            className='flex h-10 w-full rounded-md border border-primary/20 bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
           />
         </div>
         <button
@@ -276,11 +319,11 @@ export function AdminDashboard({
         </button>
       </form>
 
-      <div className='rounded-md border'>
+      <div className='rounded-md border border-primary/20'>
         <div className='relative w-full overflow-auto'>
           <table className='w-full caption-bottom text-sm'>
-            <thead className='[&_tr]:border-b'>
-              <tr className='border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted'>
+            <thead className='[&_tr]:border-b [&_tr]:border-primary/10'>
+              <tr className='border-b border-primary/10 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted'>
                 <th className='h-12 px-2 text-center align-middle font-medium text-muted-foreground w-10'></th>
                 <th className='h-12 px-2 text-center align-middle font-medium text-muted-foreground w-20'>
                   No.
@@ -307,7 +350,7 @@ export function AdminDashboard({
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, index)}
-                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted cursor-move ${
+                  className={`border-b border-primary/10 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted cursor-move ${
                     dragOverIndex === index
                       ? 'border-t-2 border-t-primary bg-muted/30'
                       : ''
@@ -327,10 +370,10 @@ export function AdminDashboard({
                             if (e.key === 'Enter') {
                               handleSaveOrder(project);
                             } else if (e.key === 'Escape') {
-                              handleCancelEdit();
+                              handleCancelEditOrder();
                             }
                           }}
-                          className='w-14 h-8 text-center rounded border border-input bg-background px-1 text-sm'
+                          className='w-14 h-8 text-center rounded border border-primary/20 bg-background px-1 text-sm'
                           autoFocus
                           disabled={saving}
                         />
@@ -347,7 +390,7 @@ export function AdminDashboard({
                           )}
                         </button>
                         <button
-                          onClick={handleCancelEdit}
+                          onClick={handleCancelEditOrder}
                           disabled={saving}
                           className='inline-flex items-center justify-center rounded-md text-sm h-8 w-8 hover:bg-red-100 text-red-600 border border-red-300'
                           title='Cancel'
@@ -365,27 +408,110 @@ export function AdminDashboard({
                       </button>
                     )}
                   </td>
+                  
+                  {/* Title Column */}
                   <td className='p-4 align-middle font-medium'>
-                    {project.title || 'Untitled'}
+                    {editingProjectId === project.id ? (
+                      <div className='flex items-center gap-2'>
+                        <input
+                          type='text'
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleSaveProject(project);
+                            } else if (e.key === 'Escape') {
+                              handleCancelEditProject();
+                            }
+                          }}
+                          className='flex-1 min-w-0 h-9 rounded border border-primary/20 bg-background px-2 text-sm'
+                          placeholder='Project Title'
+                          autoFocus
+                          disabled={saving}
+                        />
+                      </div>
+                    ) : (
+                      <div className='flex items-center gap-2'>
+                        <span className='truncate max-w-[150px]'>
+                          {project.title || 'Untitled'}
+                        </span>
+                        <button
+                          onClick={() => handleEditProject(project)}
+                          className='inline-flex items-center justify-center rounded-md text-xs h-6 w-6 hover:bg-muted text-muted-foreground'
+                          title='Edit title and URL'
+                        >
+                          <Edit2 className='h-3 w-3' />
+                        </button>
+                      </div>
+                    )}
                   </td>
-                  <td className='p-4 align-middle text-muted-foreground truncate max-w-[200px]'>
-                    <a
-                      href={project.url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='hover:underline inline-flex items-center'
-                    >
-                      {project.url} <ExternalLink className='ml-1 h-3 w-3' />
-                    </a>
+                  
+                  {/* URL Column */}
+                  <td className='p-4 align-middle'>
+                    {editingProjectId === project.id ? (
+                      <div className='flex items-center gap-2'>
+                        <input
+                          type='url'
+                          value={editUrl}
+                          onChange={(e) => setEditUrl(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleSaveProject(project);
+                            } else if (e.key === 'Escape') {
+                              handleCancelEditProject();
+                            }
+                          }}
+                          className='flex-1 min-w-0 h-9 rounded border border-primary/20 bg-background px-2 text-sm'
+                          placeholder='https://example.com'
+                          disabled={saving}
+                        />
+                      </div>
+                    ) : (
+                      <a
+                        href={project.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='hover:underline inline-flex items-center text-muted-foreground text-xs truncate max-w-[180px]'
+                      >
+                        {project.url} <ExternalLink className='ml-1 h-3 w-3 flex-shrink-0' />
+                      </a>
+                    )}
                   </td>
+                  
+                  {/* Actions Column */}
                   <td className='p-4 align-middle text-right'>
-                    <button
-                      onClick={() => deleteProject(project.id)}
-                      className='inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-destructive hover:text-destructive-foreground h-9 w-9 border border-input bg-background shadow-sm hover:text-destructive-foreground'
-                    >
-                      <Trash2 className='h-4 w-4 text-destructive' />
-                      <span className='sr-only'>Delete</span>
-                    </button>
+                    {editingProjectId === project.id ? (
+                      <div className='flex items-center justify-end gap-1'>
+                        <button
+                          onClick={() => handleSaveProject(project)}
+                          disabled={saving}
+                          className='inline-flex items-center justify-center rounded-md text-sm h-8 w-8 hover:bg-green-100 text-green-600 border border-green-300'
+                          title='Save changes'
+                        >
+                          {saving ? (
+                            <Loader2 className='h-3 w-3 animate-spin' />
+                          ) : (
+                            <Save className='h-3 w-3' />
+                          )}
+                        </button>
+                        <button
+                          onClick={handleCancelEditProject}
+                          disabled={saving}
+                          className='inline-flex items-center justify-center rounded-md text-sm h-8 w-8 hover:bg-red-100 text-red-600 border border-red-300'
+                          title='Cancel editing'
+                        >
+                          <X className='h-3 w-3' />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => deleteProject(project.id)}
+                        className='inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-destructive hover:text-destructive-foreground h-9 w-9 border border-primary/20 bg-background shadow-sm hover:text-destructive-foreground'
+                      >
+                        <Trash2 className='h-4 w-4 text-destructive' />
+                        <span className='sr-only'>Delete</span>
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -410,6 +536,9 @@ export function AdminDashboard({
         </p>
         <p>
           Or click the number to edit it directly, then press Save or Cancel.
+        </p>
+        <p>
+          Click the edit icon (pencil) next to the title to edit project details.
         </p>
       </div>
     </div>

@@ -1,33 +1,113 @@
+"use client"
+
 import Link from "next/link"
 import { ModeToggle } from "./mode-toggle"
+import { Sparkles, Menu, X } from "lucide-react"
+import { useState } from "react"
 
 export function Header() {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
     return (
-        <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md">
+        <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-primary/10">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                <Link href="/" className="flex items-center space-x-2">
-                    <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">
-                        Portfolio
+                {/* Logo */}
+                <Link href="/" className="flex items-center gap-2 group">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:shadow-primary/30 transition-shadow">
+                        <Sparkles className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="text-xl font-bold tracking-tight">
+                        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                            Portfolio
+                        </span>
+                        <span className="text-foreground">Pro</span>
                     </span>
                 </Link>
-                <nav className="flex items-center gap-6">
+
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex items-center gap-8">
                     <Link
                         href="/"
-                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary relative group"
                     >
                         Home
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full" />
                     </Link>
-                    <div className="flex items-center gap-4">
-                        <ModeToggle />
+                    <Link
+                        href="/#projects"
+                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary relative group"
+                    >
+                        Projects
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full" />
+                    </Link>
+                    <Link
+                        href="/contact"
+                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary relative group"
+                    >
+                        Contact
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full" />
+                    </Link>
+                </nav>
+
+                {/* Right Side */}
+                <div className="flex items-center gap-4">
+                    <ModeToggle />
+                    <Link
+                        href="/contact"
+                        className="hidden md:inline-flex h-10 items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent px-6 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:scale-105"
+                    >
+                        Hire Me
+                    </Link>
+                    
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="md:hidden p-2 rounded-lg hover:bg-primary/10 transition-colors"
+                    >
+                        {mobileMenuOpen ? (
+                            <X className="h-6 w-6 text-foreground" />
+                        ) : (
+                            <Menu className="h-6 w-6 text-foreground" />
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+                <div className="md:hidden border-t border-primary/10 bg-background/95 backdrop-blur-xl">
+                    <nav className="flex flex-col p-4 gap-2">
+                        <Link
+                            href="/"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                        >
+                            Home
+                        </Link>
+                        <Link
+                            href="/#projects"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                        >
+                            Projects
+                        </Link>
                         <Link
                             href="/contact"
-                            className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                        >
+                            Contact
+                        </Link>
+                        <Link
+                            href="/contact"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="mt-2 inline-flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent px-6 text-sm font-semibold text-white shadow-md"
                         >
                             Hire Me
                         </Link>
-                    </div>
-                </nav>
-            </div>
+                    </nav>
+                </div>
+            )}
         </header>
     )
 }
