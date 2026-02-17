@@ -1,0 +1,4 @@
+{
+  "installCommand": "npm ci --legacy-peer-deps",
+  "buildCommand": "prisma generate && next build"
+}
