@@ -6,11 +6,12 @@ A modern portfolio website built with Next.js, Tailwind CSS, and Prisma. Feature
 
 - 📱 **Responsive Design** - Mobile-first design using Tailwind CSS
 - 🎨 **Dark/Light Mode** - Theme toggle with system preference detection
+- 🌈 **Color Themes** - 6 beautiful color themes (Neutral, Slate, Orange, Lime, Sky, Fuchsia) with easy picker
 - 📬 **Contact Form** - Email integration via Resend API
 - 🔐 **Admin Dashboard** - Protected area for managing projects
 - 🔄 **Project Reordering** - Drag-and-drop or manual order number editing to rearrange projects
 - ✏️ **Edit Projects** - Update project titles and URLs directly in the admin dashboard
-- �️ **Database** - PostgreSQL via Neon (serverless)
+- 🗄️ **Database** - PostgreSQL via Neon (serverless)
 - 🚀 **Fast Performance** - Built with Next.js 16 and Turbopack
 
 ## Tech Stack
@@ -134,6 +135,24 @@ Follow the prompts to configure your project.
 
 - **Home (`/`)** - Main portfolio page with hero section and projects grid
 - **Contact (`/contact`)** - Contact form and direct contact options
+
+### Color Themes
+
+The portfolio comes with 6 beautiful color themes inspired by shadcn/ui:
+
+- **Neutral** - Clean gray
+- **Slate** - Blue-gray
+- **Orange** - Warm orange
+- **Lime** - Fresh green
+- **Sky** - Sky blue
+- **Fuchsia** - Vibrant magenta
+
+To change colors:
+
+- **Desktop**: Click the color picker in the header next to the "Hire Me" button
+- **Mobile**: Open the burger menu and find the color picker below the navigation links
+
+Your color preference is saved and will persist across sessions.
 
 ### Admin Dashboard
 
