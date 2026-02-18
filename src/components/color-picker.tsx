@@ -12,13 +12,13 @@ const colors = [
 ];
 
 export function ColorPicker() {
-  const [activeTheme, setActiveTheme] = useState<string>('fuchsia');
+  const [activeTheme, setActiveTheme] = useState<string>('orange');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     // Get theme from localStorage or set default
-    const savedTheme = localStorage.getItem('color-theme') || 'fuchsia';
+    const savedTheme = localStorage.getItem('color-theme') || 'orange';
     document.documentElement.setAttribute('data-theme', savedTheme);
     setActiveTheme(savedTheme);
   }, []);

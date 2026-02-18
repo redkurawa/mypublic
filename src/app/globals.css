@@ -5,7 +5,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Default Theme (Fuchsia) */
+/* Default Theme (Orange) */
 :root {
   --background: #ffffff;
   --foreground: #1a1a2e;
@@ -13,19 +13,19 @@
   --card-foreground: #1a1a2e;
   --popover: #ffffff;
   --popover-foreground: #1a1a2e;
-  --primary: #d946ef;
+  --primary: #f97316;
   --primary-foreground: #ffffff;
-  --secondary: #fdf4ff;
-  --secondary-foreground: #d946ef;
-  --muted: #fdf4ff;
+  --secondary: #fff7ed;
+  --secondary-foreground: #f97316;
+  --muted: #fff7ed;
   --muted-foreground: #64748b;
-  --accent: #c026d3;
+  --accent: #ea580c;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: rgba(217, 70, 239, 0.15);
-  --input: rgba(217, 70, 239, 0.1);
-  --ring: #d946ef;
+  --border: rgba(249, 115, 22, 0.15);
+  --input: rgba(249, 115, 22, 0.1);
+  --ring: #f97316;
   --radius: 0.75rem;
 }
 
